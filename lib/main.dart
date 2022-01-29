@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ryo_playground/tabBox/C.dart';
+import 'package:ryo_playground/tabBox/Form.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,30 +20,17 @@ class MyApp extends StatelessWidget {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: const Text(
-                    'Oeschinen Lake Campground',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    )
-                  )
-                ),
-                Text(
-                  'Kandersteg, Switzerland',
-                  style: TextStyle(
-                    color: Colors.grey[500]
-                  )
-                )
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: const Text('Oeschinen Lake Campground',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ))),
+                Text('Kandersteg, Switzerland', style: TextStyle(color: Colors.grey[500]))
               ]),
             ),
-            Icon(
-              Icons.star,
-              color: Colors.red[500],
-            ),
-            const Text('41')
+            const FavoriteWidget(),
           ],
-        )
-      );
+        ));
 
     // ボタンセクション
     Color color = Theme.of(context).primaryColor;
@@ -74,11 +63,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter layout demo')
-        ),
+        appBar: AppBar(title: const Text('Flutter layout demo')),
         body: ListView(
           children: [
+            Image.network(
+              'https://images.unsplash.com/photo-1621609764095-b32bbe35cf3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80',
+            ),
             Image.asset(
               'images/lake.jpeg',
               width: 600,
@@ -88,9 +78,11 @@ class MyApp extends StatelessWidget {
             titleSection,
             buttonSection,
             textSection,
+            const ParentWidget(),
+            const MyStatefulWidget(),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 
@@ -112,5 +104,52 @@ class MyApp extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class FavoriteWidget extends StatefulWidget {
+  const FavoriteWidget({Key? key}) : super(key: key);
+
+  @override
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
+}
+
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool _isFavorited = true;
+  int _favoriteCount = 41;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(0),
+          child: IconButton(
+            alignment: Alignment.centerRight,
+            icon: _isFavorited ? const Icon(Icons.star) : const Icon(Icons.star_border),
+            color: Colors.red[500],
+            onPressed: _toggleFavorite,
+          ),
+        ),
+        SizedBox(
+            width: 18,
+            child: SizedBox(
+              child: Text('$_favoriteCount'),
+            ))
+      ],
+    );
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      if (_isFavorited) {
+        _favoriteCount -= 1;
+        _isFavorited = false;
+      } else {
+        _favoriteCount += 1;
+        _isFavorited = true;
+      }
+    });
   }
 }
